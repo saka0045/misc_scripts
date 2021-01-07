@@ -14,7 +14,7 @@ echo "${MANIFEST}"
 
 read -r -d '' DOCS <<DOCS
 
-Script to sort the BAM file
+Script to convert BAM to FASTQ
 
 <DEFINE PARAMETERS>
 Parameters:
@@ -57,7 +57,7 @@ set -o nounset
 #BEGIN PROCESSING
 ##################################################
 
-while getopts "hi:" OPTION
+while getopts "hi:o:" OPTION
 do
     case $OPTION in
         h) echo "${DOCS}" ; exit ;;
