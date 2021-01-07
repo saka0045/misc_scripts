@@ -18,11 +18,12 @@ Script to sort the BAM file
 
 <DEFINE PARAMETERS>
 Parameters:
-	-i [required] input BAM - name of the BAM file
+	-i [required] input sorted BAM - name of the sorted BAM file
+	-o [required] output file name prefix - {sample_name}_L00#
 	-h [optional] debug - option to print this menu option
 
 Usage:
-$0 -i {input_bam}
+$0 -i {input_bam} -o {output_prefix}
 DOCS
 
 #Show help when no parameters are provided
@@ -39,8 +40,10 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 SCRIPT_FILE="${SCRIPT_DIR}/$(basename "${BASH_SOURCE[0]}")"
 SCRIPT_NAME="$(basename ${0})"
 ROOT="$(cd "${SCRIPT_DIR}/../../" && pwd)"
+BAM_TO_FASTQ="/usr/local/biotools/bedtools/2.29.1/bin/bamToFastq"
 BAM_FILE=""
-SAMTOOLS="/usr/local/biotools/samtools/1.3.1/samtools"
+QSUB="/biotools8/biotools/soge/8.1.9b/bin/lx-amd64/qsub"
+QSUB_ARGS="-q sandbox.q -l h_vmem=5G -b y -m ae -M sakai.yuta@mayo.edu -V -o /dlmp/sandbox/cgslIS/Yuta/logs/ -j y -wd $PWD"
 
 ##################################################
 #Bash handling
@@ -59,12 +62,14 @@ do
     case $OPTION in
         h) echo "${DOCS}" ; exit ;;
         i) BAM_FILE=${OPTARG} ;;
+        o) SAMPLE_PREFIX=${OPTARG} ;;
         ?) echo "${DOCS}" ; exit ;;
     esac
 done
 
-SORTED_BAM_FILE="sorted_${BAM_FILE}"
+READ1_FASTQ="${SAMPLE_PREFIX}_R1_001.fastq"
+READ2_FASTQ="${SAMPLE_PREFIX}_R2_001.fastq"
 
-CMD="${SAMTOOLS} sort -n -o ${SORTED_BAM_FILE} ${BAM_FILE}"
+CMD="${QSUB} ${QSUB_ARGS} ${BAM_TO_FASTQ} -i ${BAM_FILE} -fq ${READ1_FASTQ} -fq2 ${READ2_FASTQ}"
 echo "Executing ${CMD}"
 eval ${CMD}
