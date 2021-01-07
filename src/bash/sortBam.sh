@@ -42,7 +42,7 @@ ROOT="$(cd "${SCRIPT_DIR}/../../" && pwd)"
 BAM_FILE=""
 SAMTOOLS="/usr/local/biotools/samtools/1.3.1/samtools"
 QSUB="/biotools8/biotools/soge/8.1.9b/bin/lx-amd64/qsub"
-QSUB_ARGS="-q sandbox.q -l h_vmem=5G -b y -m ae -M sakai.yuta@mayo.edu -V -o /dlmp/sandbox/cgslIS/Yuta/logs/ -j y -wd $PWD"
+QSUB_ARGS="-q sandbox.q -l h_vmem=5G -b y -m ae -M sakai.yuta@mayo.edu -N sortBam -V -o /dlmp/sandbox/cgslIS/Yuta/logs/ -j y -wd $PWD"
 
 ##################################################
 #Bash handling
